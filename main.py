@@ -3,7 +3,8 @@ from modelLoader import ModelLoader
 from surfaceAnalyzer import SurfaceAnalyzer
 from reportGenerator import ReportGenerator
 from symmetryAnalyzer import SymmetryAnalyzer
-import preprocessOBJ
+import  preprocessOBJ
+import trimesh
 
 def main():
     parser = argparse.ArgumentParser(description='3D Model Analysis Tool')
@@ -15,11 +16,10 @@ def main():
         args.mesh = preprocessOBJ.convert_to_obj(args.mesh)
 
     # Preprocess the .obj file
-    # preprocessOBJ.preprocess(args.mesh)
+    preprocessOBJ.preprocess(args.mesh)
 
     # Load the model
-    loader = ModelLoader()
-    model = loader.load_model(args.mesh)
+    model = trimesh.load(args.mesh, force='mesh')
 
     if model is not None:
         # Perform analysis

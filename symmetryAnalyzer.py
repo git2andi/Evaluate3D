@@ -23,6 +23,7 @@ class SymmetryAnalyzer:
         symmetric_vertices = np.sum(distances < tolerance)
         score = symmetric_vertices / len(self.mesh.vertices) * 100
         return score
+    
     def mirror_mesh(self, plane):
         """
         Mirror the mesh with respect to a given plane.
