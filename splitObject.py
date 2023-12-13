@@ -1,16 +1,13 @@
-import os
-import argparse
 import trimesh
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import os
 
-def evaluate_symmetry(obj_file):
+def split_and_return_objs(input_file, output_dir):
     try:
-        # Load the OBJ file
-        mesh = trimesh.load(obj_file, force='mesh')
+        # Make a copy of the input mesh to avoid modifying it
+        mesh = trimesh.load(input_file, force='mesh')
 
-        # apply subdivision
+        # Apply subdivision
         mesh = mesh.subdivide(2)
 
         # Find the midpoint along the X-axis
@@ -31,23 +28,17 @@ def evaluate_symmetry(obj_file):
         right_mesh = trimesh.Trimesh(vertices=mesh.vertices, faces=right_faces)
 
         # Construct the output filenames
-        base_name, ext = os.path.splitext(obj_file)
-        left_file = f"{base_name}_left{ext}"
-        right_file = f"{base_name}_right{ext}"
+        base_name = "rotated_mesh"
+        base_name = "rotated_mesh"  # Adjust this as needed
+        left_file = os.path.join(output_dir, f"{base_name}_left.obj")
+        right_file = os.path.join(output_dir, f"{base_name}_right.obj")
 
         # Save the left and right meshes
         left_mesh.export(left_file)
         right_mesh.export(right_file)
-        
+
+        return left_mesh, right_mesh
+
     except Exception as e:
         print(f"An error occurred: {e}")
-
-def main():
-    parser = argparse.ArgumentParser(description='Evaluate the symmetry of a 3D model.')
-    parser.add_argument('--mesh', type=str, required=True, help='Path to the OBJ file')
-    args = parser.parse_args()
-
-    evaluate_symmetry(args.mesh)
-
-if __name__ == '__main__':
-    main()
+        return None, None
